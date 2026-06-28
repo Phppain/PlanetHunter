@@ -13,4 +13,4 @@ RUN apt-get update && apt-get install -y libgomp1 gcc g++ && rm -rf /var/lib/apt
 COPY backend/ .
 
 # 4️⃣ Запуск FastAPI через uvicorn
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
