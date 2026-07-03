@@ -1,12 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "./AuthContext";
+
 
 export default function Input({ onResultsUpdate }) {
     const [isLoading, setIsLoading] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
-    const { token } = useAuth();
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -22,11 +21,6 @@ export default function Input({ onResultsUpdate }) {
             alert('Пожалуйста, выберите файл');
             return;
         }
-        if(!token){
-            alert('Сначала войдите в аккаунт');
-            return;
-        }
-
         setIsLoading(true);
         try {
             const formData = new FormData();
@@ -35,9 +29,6 @@ export default function Input({ onResultsUpdate }) {
             const response = await fetch('http://localhost:8000/analyze/', {
                 method: 'POST',
                 body: formData,
-                headers: {
-                  Authorization: `Bearer ${token}`
-                }
             });
 
             if (response.ok) {
