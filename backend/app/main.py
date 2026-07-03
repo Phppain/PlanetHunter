@@ -1,20 +1,15 @@
 # app/main.py
 from fastapi import FastAPI, UploadFile, File, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.orm import Session
 import pandas as pd
 import numpy as np
 import shap
 import joblib
 import io
 import asyncio
-
-from . import models, crud, schemas, auth
-from .database import engine, Base, SessionLocal
+import os
 
 # создаём таблицы
-Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Exoplanet Detector API", description="AI модель для поиска экзопланет", version="1.0")
 
@@ -26,52 +21,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# загружаем модель один раз
-import os, joblib
-
-model_path = os.path.join(os.path.dirname(__file__), "model.pkl")
-model = joblib.load(model_path)
-# auth endpoints
-@app.post("/auth/register", response_model=dict)
-def register(user: schemas.UserCreate, db: Session = Depends(auth.get_db)):
-    existing = crud.get_user_by_username(db, user.username)
-    if existing:
-        raise HTTPException(status_code=400, detail="Пользователь с таким именем уже существует")
-    crud.create_user(db, user.username, user.password)
-    return {"status": "ok", "msg": "Пользователь создан"}
-
-@app.post("/auth/token", response_model=schemas.Token)
-def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(auth.get_db)):
-    user = crud.get_user_by_username(db, form_data.username)
-    if not user or not crud.verify_password(form_data.password, user.hashed_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Неверное имя пользователя или пароль",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    access_token_expires = timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = auth.create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
-    )
-    return {"access_token": access_token, "token_type": "bearer"}
-
-# helper to get db in endpoints
-def get_db_session():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
 @app.get("/")
 def root():
     return {"message": "API работает. Зарегистрируйтесь и залогиньтесь для использования /analyze/"}
 
-from datetime import timedelta
 @app.post("/analyze/")
 async def analyze(
     file: UploadFile = File(...),
-    current_user: models.User = Depends(auth.get_current_user)
 ):
     try:
         # --- 1. Читаем CSV из UploadFile ---
