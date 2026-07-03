@@ -1,0 +1,110 @@
+PlanetHunter
+
+NASA Space Apps Challenge Project
+
+Machine Learning • Astronomy • Explainable AI • Exoplanet Detection
+
+AI-powered exoplanet detection system developed during NASA Space Apps Challenge.
+
+PlanetHunter analyzes astronomical datasets from NASA’s Kepler mission and identifies potential exoplanets using machine learning techniques. The project combines data preprocessing, feature engineering, explainable AI (XAI), and an interactive web interface to make exoplanet discovery more accessible and understandable.
+
+Features
+
+* Upload and analyze Kepler datasets in CSV format
+* Machine learning based exoplanet detection
+* Explainable AI (SHAP) interpretation for every prediction
+* Planet-to-Earth comparison using physical characteristics
+* Interactive web interface
+* FastAPI backend and React frontend
+
+How It Works
+
+The system processes raw Kepler mission data and extracts features relevant to exoplanet detection.
+
+Instead of relying solely on pre-classified labels, the model focuses on astrophysical indicators related to transit detection, including changes in stellar brightness and planetary characteristics.
+
+The workflow:
+
+1. Dataset upload
+2. Data preprocessing and validation
+3. Feature extraction
+4. LightGBM prediction
+5. SHAP explainability analysis
+6. Planet similarity assessment
+7. Result visualization
+
+Technology Stack
+
+Backend
+
+* Python
+* FastAPI
+* Pandas
+* NumPy
+* LightGBM
+* SHAP
+
+Frontend
+
+* React
+* Next.js
+* Tailwind CSS
+
+Explainable AI
+
+To improve transparency, PlanetHunter uses SHAP (SHapley Additive exPlanations).
+
+For each detected exoplanet candidate, the system shows which features had the greatest influence on the model’s decision, helping users understand why an object was classified as a potential planet.
+
+Screenshots
+
+Main Page
+
+[Add screenshot]
+
+Analysis Results
+
+[Add screenshot]
+
+XAI Explanation
+
+[Add screenshot]
+
+My Contribution
+
+My primary responsibilities included:
+
+* Analysis of NASA Kepler datasets
+* Data cleaning and preprocessing
+* Integration of multiple datasets with inconsistent structures
+* Feature selection based on astrophysical principles
+* Machine learning model development
+* Presentation and technical explanation of the solution
+
+One of the major challenges was combining several datasets that contained different structures and identifiers. By identifying common patterns and relationships between the datasets, it became possible to build a unified dataset suitable for machine learning.
+
+Future Improvements
+
+* Improved model accuracy
+* Support for additional NASA datasets
+* Advanced visualization of transit curves
+* Habitability scoring system
+* Public cloud deployment
+
+Installation
+
+Backend
+
+cd backend
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+
+Frontend
+
+cd frontend
+npm install
+npm run dev
+
+License
+
+This project was created for educational and research purposes as part of NASA Space Apps Challenge.
